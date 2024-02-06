@@ -1,6 +1,6 @@
 {
 	"name": "@gmaps-tools/tile-coordinates",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"description": "A parser for Google Maps' protobuf-like formats",
 	"author": "Emily Nagy",
 	"license": "MIT",
@@ -18,12 +18,12 @@
 		"cov": "jest --coverage",
 		"build": "rm -rf dist && npx tsc --module commonjs --outDir dist/cjs && npx tsc --module es2022 --outDir dist/esm && cp dist/cjs/index.d.ts dist/index.d.ts"
 	},
-	"main": "dist/cjs/index.js",
-	"module": "dist/esm/index.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/cjs/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
-		"require": "dist/cjs/index.js",
-		"import": "dist/esm/index.js"
+		"require": "./dist/cjs/index.js",
+		"import": "./dist/esm/index.js"
 	},
 	"type": "module",
 	"repository": {

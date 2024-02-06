@@ -69,8 +69,6 @@ getCenterLatLngFromTile({x: 7359, y: 14579, z: 15}) // {lat: 19.440694401302856,
 getBoundaryLatLngFromTile({x: 7359, y: 14579, z: 15}) // {left: -99.151611328125, right: -99.140625, top: 19.445874298215944, bottom: 19.435514339097814}                             
 ```
 
-or individu
-
 ## License
 
 `tile-coordinates` is published under the MIT licence, see the `LICENSE` file for more details.

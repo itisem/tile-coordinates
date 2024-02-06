@@ -10,8 +10,13 @@ export function getTileFromLat(lat: number, zoom: number): number{
 	if(Math.abs(lat) > 90) throw new Error(`Invalid latitude ${lat}`);
 	// if zoom is < 0 or not an integer, also break
 	if(zoom < 0 || !Number.isInteger(zoom)) throw new Error(`Invalid zoom level ${zoom}`);
+
 	// if zoom === 0, everything is 0
 	if(zoom === 0) return 0;
+
+	// edge cases
+	if(lat === 90) return 0;
+	if(lat === -90) return scale - 1;
 
 	const scale = 1 << zoom;
 	// ySin is limited in order to not fully break mathematics. in effect, this forces lat to be in the [-0.9999, 0.9999] range
@@ -30,10 +35,17 @@ export function getTileFromLng(lng: number, zoom: number): number{
 	if(Math.abs(lng) > 180) throw new Error(`Invalid longitude ${lng}`);
 	// if zoom is < 0 or not an integer, break
 	if(zoom < 0 || !Number.isInteger(zoom)) throw new Error(`Invalid zoom level ${zoom}`);
+
+	const scale = 1 << zoom;
+
 	// if zoom is 0, everything is 0
 	if(zoom === 0) return 0;
 
-	return Math.floor((0.5 + lng / 360) * (1 << zoom));
+	// edge cases
+	if(lng === -180) return 0;
+	if(lng === 180) return scale - 1;
+
+	return Math.floor((0.5 + lng / 360) * scale);
 }
 
 export function getTileFromLatLng(
