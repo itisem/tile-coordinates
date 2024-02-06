@@ -82,8 +82,10 @@ describe("getTileFromLng", () => {
 	}
 
 	test("edges", () => {
-		expect(getTileFromLng(-180, 10)).toEqual(0);
-		expect(getTileFromLng(180, 10)).toEqual((1 << 10) - 1);
+		for(let i = 0; i <= 20; i++){
+			expect(getTileFromLng(-180, i)).toEqual(0);
+			expect(getTileFromLng(180, i)).toEqual((1 << i) - 1);
+		}
 	});
 });
 
