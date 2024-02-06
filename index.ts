@@ -1,5 +1,3 @@
-interface TileBoundaries extends TileBoundariesLat, TileBoundariesLng{};
-
 // functions are implemented from the following source for tile -> latlng:
 // https://developers.google.com/maps/documentation/javascript/examples/map-coordinates#maps_map_coordinates-typescript
 // for latlng -> tile, it is just some solving the equations the other way round
@@ -38,7 +36,10 @@ export function getTileFromLng(lng: number, zoom: number): number{
 	return Math.floor((0.5 + lng / 360) * (1 << zoom));
 }
 
-export function getTileFromLatLng(coordinates: {lat: number, lng: number}, zoom: number): {x: number, y: number, z: number}{
+export function getTileFromLatLng(
+	coordinates: {lat: number, lng: number},
+	zoom: number
+): {x: number, y: number, z: number}{
 	// we could *technically* make things ever so slightly faster by rewriting all code since 1 << zoom wouldn't need recalculating
 	// but it is such a miniscule timesave (as it is a binary operation) that it's not worth
 	return {
