@@ -22,14 +22,28 @@ function getTileFromLatLng(
     y: number;
     z: number; // always equal to the zoom level
 }
-
+// gets a tile's central latitude from its y and z coordinates
+// alias: getLatFromTile
+function getCenterLatFromTile(y: number, z: number): number;
+// gets a tile's central longitude from its y and z coordinates
+// alias: getLngFromTile
+function getCenterLngFromTile(x: number, z: number): number;
+// gets a tile's midpoiont from its information
+// alias: getLatLngFromTile
+function getCenterLatLngFromTile(
+	tile: {x: number, y: number, z: number}
+): {
+	lat: number,
+	lng: number
+};
 ```
 
 Example usage:
 ```typescript
-import {getTileFromLatLng} from "@gmaps-tools/tile-coordinates";
+import {getTileFromLatLng, getCenterLatLngFromTile} from "@gmaps-tools/tile-coordinates";
 
-getTileFromLatLng({lat: 19.436379721550452, lng: -99.15153772681174}, 15) // {x: 7359, y: 14579, z: 15}
+getTileFromLatLng({lat: 19.436379721550452, lng: -99.15153772681174}, 15); // {x: 7359, y: 14579, z: 15}
+getCenterLatLngFromTile({x: 7359, y: 14579, z: 15}) // {lat: 19.440694401302856, lng: -99.1461181640625}
 ```
 
 or individu

@@ -48,4 +48,54 @@ export function getTileFromLatLng(
 		z: zoom
 	};
 }
-///////////////////////// latlng from tile
+///////////////////////// latlng from tile. calculated using solving the above formula for lat / lng
+
+
+// helper functions for unrounded tiles. not exported
+
+function getLatFromUnroundedTile(y: number, z: number): number{
+	const scale = 1 << z;
+	if(y > scale || y < 0) throw new Error(`Invalid tile y ${y}`);
+	// special cases. *should* not fail in normal calculations, but better safe than sorry
+	if(y === scale) return 90;
+	if(y === 0) return -90;
+
+	const fraction = Math.exp(4 * Math.PI * (0.5 - y / scale));
+	const ySin = (fraction - 1)/(fraction + 1);
+	return Math.asin(ySin) * 180 / Math.PI;
+}
+
+function getLngFromUnroundedTile(x: number, z: number): number{
+	const scale = 1 << z;
+	if(x > scale || x < 0) throw new Error(`Invalid tile y ${y}`);
+	// special cases. *should* not fail in normal calculations, but better safe than sorry
+	if(x === scale) return 180;
+	if(x === 0) return -180;
+
+	return (x / scale - 0.5) * 360;
+}
+
+// usable functions
+
+export function getCenterLatFromTile(y: number, z: number): number{
+	if(!Number.isInteger(y)) throw new Error(`Tile ${y} must be an integer`);
+	return getLatFromUnroundedTile(y + 0.5, z);
+}
+
+export function getCenterLngFromTile(x: number, z: number): number{
+	if(!Number.isInteger(x)) throw new Error(`Tile ${x} must be an integer`);
+	return getLngFromUnroundedTile(x + 0.5, z);
+}
+
+export function getCenterLatLngFromTile(
+	tile: {x: number, y: number, z: number}
+): {lat: number, lng: number}{
+	return {
+		lat: getCenterLatFromTile(tile.y, tile.z),
+		lng: getCenterLngFromTile(tile.x, tile.z)
+	}
+};
+
+export const getLatFromTile = getCenterLatFromTile;
+export const getLngFromTile = getCenterLngFromTile;
+export const getLatLngFromTile = getCenterLatLngFromTile;

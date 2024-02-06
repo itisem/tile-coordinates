@@ -1,4 +1,7 @@
-import {getTileFromLat, getTileFromLng, getTileFromLatLng} from "../index";
+import {
+	getTileFromLat, getTileFromLng, getTileFromLatLng,
+	getCenterLatFromTile, getCenterLngFromTile, getCenterLatLngFromTile
+} from "../index";
 
 // a whole bunch of valid tile to coordinate pairings, manually checked using osm & google maps pre-rendered tiles
 const pairings = [
@@ -99,4 +102,33 @@ describe("getTileFromLatLng", () => {
 			});
 		});
 	}
+});
+
+describe("getCenterLatFromTile", () => {
+	test("Invalid tile y", () => {
+		expect(() => getCenterLatFromTile(-1, 10)).toThrow();
+		expect(() => getCenterLatFromTile(1024, 10)).toThrow();
+		expect(() => getCenterLatFromTile(2.99, 10)).toThrow();
+	});
+});
+
+describe("getCenterLngFromTile", () => {
+	test("Invalid tile x", () => {
+		expect(() => getCenterLngFromTile(-1, 10)).toThrow();
+		expect(() => getCenterLngFromTile(1024, 10)).toThrow();
+		expect(() => getCenterLngFromTile(2.99, 10)).toThrow();
+	});
+});
+
+describe("getCenterLatLngFromTile", () => {
+	test("Invalid tile x", () => {
+		expect(() => getCenterLatLngFromTile({x: -1, y: 10}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 1024, y: 10}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 2.99, y: 10}, 10)).toThrow();
+	});
+	test("Invalid tile y", () => {
+		expect(() => getCenterLatLngFromTile({x: 10, y: -1}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 10, y: 1024}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 10, y: 2.99}, 10)).toThrow();
+	});
 });
