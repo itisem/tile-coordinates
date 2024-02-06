@@ -25,5 +25,9 @@
 		"require": "dist/cjs/index.js",
 		"import": "dist/esm/index.js"
 	},
-	"type": "module"
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/itisem/tile-coordinates.git"
+	}
 }
