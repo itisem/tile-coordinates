@@ -1,6 +1,7 @@
 import {
 	getTileFromLat, getTileFromLng, getTileFromLatLng,
-	getCenterLatFromTile, getCenterLngFromTile, getCenterLatLngFromTile
+	getCenterLatFromTile, getCenterLngFromTile, getCenterLatLngFromTile,
+	getBoundaryLatFromTile, getBoundaryLngFromTile, getBoundaryLatLngFromTile
 } from "../index";
 
 // a whole bunch of valid tile to coordinate pairings, manually checked using osm & google maps pre-rendered tiles
@@ -110,6 +111,10 @@ describe("getCenterLatFromTile", () => {
 		expect(() => getCenterLatFromTile(1024, 10)).toThrow();
 		expect(() => getCenterLatFromTile(2.99, 10)).toThrow();
 	});
+	test("Invalid tile z", () => {
+		expect(() => getCenterLatFromTile(60, -1)).toThrow();
+		expect(() => getCenterLatFromTile(60, 1.99)).toThrow();
+	});
 });
 
 describe("getCenterLngFromTile", () => {
@@ -118,17 +123,72 @@ describe("getCenterLngFromTile", () => {
 		expect(() => getCenterLngFromTile(1024, 10)).toThrow();
 		expect(() => getCenterLngFromTile(2.99, 10)).toThrow();
 	});
+	test("Invalid tile z", () => {
+		expect(() => getCenterLngFromTile(60, -1)).toThrow();
+		expect(() => getCenterLngFromTile(60, 1.99)).toThrow();
+	});
 });
 
 describe("getCenterLatLngFromTile", () => {
 	test("Invalid tile x", () => {
-		expect(() => getCenterLatLngFromTile({x: -1, y: 10}, 10)).toThrow();
-		expect(() => getCenterLatLngFromTile({x: 1024, y: 10}, 10)).toThrow();
-		expect(() => getCenterLatLngFromTile({x: 2.99, y: 10}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: -1, y: 10, z: 10})).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 1024, y: 10, z: 10})).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 2.99, y: 10, z: 10})).toThrow();
 	});
 	test("Invalid tile y", () => {
-		expect(() => getCenterLatLngFromTile({x: 10, y: -1}, 10)).toThrow();
-		expect(() => getCenterLatLngFromTile({x: 10, y: 1024}, 10)).toThrow();
-		expect(() => getCenterLatLngFromTile({x: 10, y: 2.99}, 10)).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 10, y: -1, z: 10})).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 10, y: 1024, z: 10})).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 10, y: 2.99, z: 10})).toThrow();
+	});
+	test("Invalid tile z", () => {
+		expect(() => getCenterLatLngFromTile({x: 60, y: 60, z: -1})).toThrow();
+		expect(() => getCenterLatLngFromTile({x: 60, y: 60, z: 1.99})).toThrow();
+	});
+});
+
+describe("getBoundaryLatFromTile", () => {
+	test("Invalid tile y", () => {
+		expect(() => getBoundaryLatFromTile(-1, 10)).toThrow();
+		expect(() => getBoundaryLatFromTile(1024, 10)).toThrow();
+		expect(() => getBoundaryLatFromTile(2.99, 10)).toThrow();
+	});
+	for(let pairing of pairings){
+		test(`${pairing.name}: coords ${pairing.lat},${pairing.lng}, zoom ${pairing.z}, tile ${pairing.x},${pairing.y}`, () => {
+			const boundaries = getBoundaryLatFromTile(pairing.y, pairing.z);
+			expect(boundaries.top).toBeGreaterThanOrEqual(pairing.lat);
+			expect(boundaries.bottom).toBeLessThanOrEqual(pairing.lat);
+		});
+	}
+});
+
+describe("getBoundaryLngFromTile", () => {
+	test("Invalid tile x", () => {
+		expect(() => getBoundaryLngFromTile(-1, 10)).toThrow();
+		expect(() => getBoundaryLngFromTile(1024, 10)).toThrow();
+		expect(() => getBoundaryLngFromTile(2.99, 10)).toThrow();
+	});
+	for(let pairing of pairings){
+		test(`${pairing.name}: coords ${pairing.lat},${pairing.lng}, zoom ${pairing.z}, tile ${pairing.x},${pairing.y}`, () => {
+			const boundaries = getBoundaryLngFromTile(pairing.x, pairing.z);
+			expect(boundaries.left).toBeLessThanOrEqual(pairing.lng);
+			expect(boundaries.right).toBeGreaterThanOrEqual(pairing.lng);
+		});
+	}
+});
+
+describe("getBoundaryLatLngFromTile", () => {
+	test("Invalid tile x", () => {
+		expect(() => getBoundaryLatLngFromTile({x: -1, y: 10}, 10)).toThrow();
+		expect(() => getBoundaryLatLngFromTile({x: 1024, y: 10}, 10)).toThrow();
+		expect(() => getBoundaryLatLngFromTile({x: 2.99, y: 10}, 10)).toThrow();
+	});
+	test("Invalid tile y", () => {
+		expect(() => getBoundaryLatLngFromTile({x: 10, y: -1}, 10)).toThrow();
+		expect(() => getBoundaryLatLngFromTile({x: 10, y: 1024}, 10)).toThrow();
+		expect(() => getBoundaryLatLngFromTile({x: 10, y: 2.99}, 10)).toThrow();
+	});
+	test("Invalid tile z", () => {
+		expect(() => getBoundaryLatLngFromTile({x: 60, y: 60, z: -1})).toThrow();
+		expect(() => getBoundaryLatLngFromTile({x: 60, y: 60, z: 1.99})).toThrow();
 	});
 });

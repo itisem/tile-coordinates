@@ -55,10 +55,15 @@ export function getTileFromLatLng(
 
 function getLatFromUnroundedTile(y: number, z: number): number{
 	const scale = 1 << z;
+
+	// tile errors
 	if(y > scale || y < 0) throw new Error(`Invalid tile y ${y}`);
+	if(z < 0) throw new Error(`Tile zoom ${z} must be at least 0`);
+	if(!Number.isInteger(z)) throw new Error(`Tile zoom ${z} must be an integer`);
+
 	// special cases. *should* not fail in normal calculations, but better safe than sorry
-	if(y === scale) return 90;
-	if(y === 0) return -90;
+	if(y === scale) return -90;
+	if(y === 0) return 90;
 
 	const fraction = Math.exp(4 * Math.PI * (0.5 - y / scale));
 	const ySin = (fraction - 1)/(fraction + 1);
@@ -67,7 +72,12 @@ function getLatFromUnroundedTile(y: number, z: number): number{
 
 function getLngFromUnroundedTile(x: number, z: number): number{
 	const scale = 1 << z;
+
+	// tile errors
 	if(x > scale || x < 0) throw new Error(`Invalid tile y ${y}`);
+	if(z < 0) throw new Error(`Tile zoom ${z} must be at least 0`);
+	if(!Number.isInteger(z)) throw new Error(`Tile zoom ${z} must be an integer`);
+
 	// special cases. *should* not fail in normal calculations, but better safe than sorry
 	if(x === scale) return 180;
 	if(x === 0) return -180;
@@ -99,3 +109,41 @@ export function getCenterLatLngFromTile(
 export const getLatFromTile = getCenterLatFromTile;
 export const getLngFromTile = getCenterLngFromTile;
 export const getLatLngFromTile = getCenterLatLngFromTile;
+
+export function getBoundaryLatFromTile(y: number, z: number): {
+	top: number;
+	bottom: number;
+}{
+	if(!Number.isInteger(y)) throw new Error(`Tile ${y} must be an integer`);
+	return {
+		top: getLatFromUnroundedTile(y, z),
+		bottom: getLatFromUnroundedTile(y + 1, z)
+	};
+}
+
+export function getBoundaryLngFromTile(x: number, z: number): {
+	left: number;
+	right: number;
+}{
+	if(!Number.isInteger(x)) throw new Error(`Tile ${x} must be an integer`);
+	return {
+		left: getLngFromUnroundedTile(x, z),
+		right: getLngFromUnroundedTile(x + 1, z)
+	};
+}
+
+export function getBoundaryLatLngFromTile(tile: {x: number, y: number, z: number}): {
+	left: number;
+	right: number;
+	top: number;
+	bottom: number;
+}{
+	if(!Number.isInteger(tile.x)) throw new Error(`Tile x ${tile.x} must be an integer`);
+	if(!Number.isInteger(tile.y)) throw new Error(`Tile y ${tile.y} must be an integer`);
+	return {
+		left: getLngFromUnroundedTile(tile.x, z),
+		right: getLngFromUnroundedTile(tile.x + 1, z),
+		top: getLatFromUnroundedTile(tile.y, z),
+		bottom: getLatFromUnroundedTile(tile.y + 1, z)
+	};
+}
