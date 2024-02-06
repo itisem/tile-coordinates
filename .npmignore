@@ -1,0 +1,9 @@
+# tests
+tests
+coverage
+
+# typescript source code
+index.ts
+
+# typescript
+tsconfig.json
