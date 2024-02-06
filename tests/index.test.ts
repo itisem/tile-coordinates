@@ -58,6 +58,11 @@ describe("getTileFromLat", () => {
 			expect(getTileFromLat(pairing.lat, pairing.z)).toEqual(pairing.y);
 		});
 	}
+
+	test("edges", () => {
+		expect(getTileFromLat(90, 10)).toEqual(0);
+		expect(getTileFromLat(-90, 10)).toEqual((1 << 10) - 1);
+	});
 });
 
 describe("getTileFromLng", () => {
@@ -75,6 +80,11 @@ describe("getTileFromLng", () => {
 			expect(getTileFromLng(pairing.lng, pairing.z)).toEqual(pairing.x);
 		});
 	}
+
+	test("edges", () => {
+		expect(getTileFromLng(-180, 10)).toEqual(0);
+		expect(getTileFromLng(180, 10)).toEqual((1 << 10) - 1);
+	});
 });
 
 describe("getTileFromLatLng", () => {
