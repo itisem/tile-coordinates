@@ -191,4 +191,13 @@ describe("getBoundaryLatLngFromTile", () => {
 		expect(() => getBoundaryLatLngFromTile({x: 60, y: 60, z: -1})).toThrow();
 		expect(() => getBoundaryLatLngFromTile({x: 60, y: 60, z: 1.99})).toThrow();
 	});
+	for(let pairing of pairings){
+		test(`${pairing.name}: coords ${pairing.lat},${pairing.lng}, zoom ${pairing.z}, tile ${pairing.x},${pairing.y}`, () => {
+			const boundaries = getBoundaryLatLngFromTile({x: pairing.x, y: pairing.y, z: pairing.z});
+			expect(boundaries.left).toBeLessThanOrEqual(pairing.lng);
+			expect(boundaries.right).toBeGreaterThanOrEqual(pairing.lng);
+			expect(boundaries.top).toBeGreaterThanOrEqual(pairing.lat);
+			expect(boundaries.bottom).toBeLessThanOrEqual(pairing.lat);
+		});
+	}
 });

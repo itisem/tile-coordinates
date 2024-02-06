@@ -74,7 +74,7 @@ function getLngFromUnroundedTile(x: number, z: number): number{
 	const scale = 1 << z;
 
 	// tile errors
-	if(x > scale || x < 0) throw new Error(`Invalid tile y ${y}`);
+	if(x > scale || x < 0) throw new Error(`Invalid tile x ${x}`);
 	if(z < 0) throw new Error(`Tile zoom ${z} must be at least 0`);
 	if(!Number.isInteger(z)) throw new Error(`Tile zoom ${z} must be an integer`);
 
@@ -141,9 +141,9 @@ export function getBoundaryLatLngFromTile(tile: {x: number, y: number, z: number
 	if(!Number.isInteger(tile.x)) throw new Error(`Tile x ${tile.x} must be an integer`);
 	if(!Number.isInteger(tile.y)) throw new Error(`Tile y ${tile.y} must be an integer`);
 	return {
-		left: getLngFromUnroundedTile(tile.x, z),
-		right: getLngFromUnroundedTile(tile.x + 1, z),
-		top: getLatFromUnroundedTile(tile.y, z),
-		bottom: getLatFromUnroundedTile(tile.y + 1, z)
+		left: getLngFromUnroundedTile(tile.x, tile.z),
+		right: getLngFromUnroundedTile(tile.x + 1, tile.z),
+		top: getLatFromUnroundedTile(tile.y, tile.z),
+		bottom: getLatFromUnroundedTile(tile.y + 1, tile.z)
 	};
 }
