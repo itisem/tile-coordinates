@@ -16,11 +16,6 @@ export function getTileFromLat(lat: number, zoom: number): number{
 
 	const scale = 1 << zoom;
 
-	// edge cases
-	if(lat === 90) return 0;
-	if(lat === -90) return scale - 1;
-
-	// ySin is limited in order to not fully break mathematics. in effect, this forces lat to be in the [-0.9999, 0.9999] range
 	const ySin = Math.min(
 		Math.max(
 			Math.sin(lat * Math.PI/180),
@@ -28,7 +23,17 @@ export function getTileFromLat(lat: number, zoom: number): number{
 		),
 		0.9999
 	);
-	return Math.floor((0.5 - Math.log((1 + ySin) / (1 - ySin)) / (4 * Math.PI)) * scale);
+
+	// this *could* be more elegant if we adjusted the limitations in ySin itself
+	// but it does the job without requiring pre-calculations
+	// should fix sometime though
+	return Math.min(
+		Math.max(
+			Math.floor((0.5 - Math.log((1 + ySin) / (1 - ySin)) / (4 * Math.PI)) * scale),
+			0
+		),
+		scale - 1
+	);
 }
 
 export function getTileFromLng(lng: number, zoom: number): number{
@@ -43,7 +48,6 @@ export function getTileFromLng(lng: number, zoom: number): number{
 	if(zoom === 0) return 0;
 
 	// edge cases
-	if(lng === -180) return 0;
 	if(lng === 180) return scale - 1;
 
 	return Math.floor((0.5 + lng / 360) * scale);
