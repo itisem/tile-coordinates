@@ -36,14 +36,37 @@ function getCenterLatLngFromTile(
 	lat: number,
 	lng: number
 };
+// gets a tile's latitude boundaries from its y and z coordinates
+function getBoundaryLatFromTile(y: number, z: number): {
+    top: number;
+    bottom: number;
+};
+// gets a tile's longitude boundaries from its x and z coordinates
+export declare function getBoundaryLngFromTile(x: number, z: number): {
+    left: number;
+    right: number;
+};
+// gets a tile's boundaries from its information
+export declare function getBoundaryLatLngFromTile(tile: {
+    x: number;
+    y: number;
+    z: number;
+}): {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+};
+
 ```
 
 Example usage:
 ```typescript
-import {getTileFromLatLng, getCenterLatLngFromTile} from "@gmaps-tools/tile-coordinates";
+import {getTileFromLatLng, getCenterLatLngFromTile, getBoundaryLatLngFromTile} from "@gmaps-tools/tile-coordinates";
 
 getTileFromLatLng({lat: 19.436379721550452, lng: -99.15153772681174}, 15); // {x: 7359, y: 14579, z: 15}
 getCenterLatLngFromTile({x: 7359, y: 14579, z: 15}) // {lat: 19.440694401302856, lng: -99.1461181640625}
+getBoundaryLatLngFromTile({x: 7359, y: 14579, z: 15}) // {left: -99.151611328125, right: -99.140625, top: 19.445874298215944, bottom: 19.435514339097814}                             
 ```
 
 or individu
