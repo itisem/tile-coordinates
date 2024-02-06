@@ -14,11 +14,12 @@ export function getTileFromLat(lat: number, zoom: number): number{
 	// if zoom === 0, everything is 0
 	if(zoom === 0) return 0;
 
+	const scale = 1 << zoom;
+
 	// edge cases
 	if(lat === 90) return 0;
 	if(lat === -90) return scale - 1;
 
-	const scale = 1 << zoom;
 	// ySin is limited in order to not fully break mathematics. in effect, this forces lat to be in the [-0.9999, 0.9999] range
 	const ySin = Math.min(
 		Math.max(
